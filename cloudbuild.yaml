@@ -49,8 +49,8 @@ steps:
   args:
   - '-c'
   - |
-    gcloud source repos clone hello-cloudbuild-env && \
-    cd hello-cloudbuild-env && \
+    git clone https://github.com/gentoosu/Cloudbuild-hello-world-react-env.git && \
+    cd Cloudbuild-hello-world-react-env && \
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
