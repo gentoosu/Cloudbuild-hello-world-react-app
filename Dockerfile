@@ -13,10 +13,16 @@
 # limitations under the License.
 
 # [START dockerfile]
-FROM python:3.7-slim
-RUN pip install flask
+FROM node:13.12.0-alpine
+RUN apk add python
+
 WORKDIR /app
-COPY app.py /app/app.py
-ENTRYPOINT ["python"]
-CMD ["/app/app.py"]
+ENV PATH /app/node_modules/.bin:$PATH
+COPY ./app/package*.json ./
+RUN npm i
+
+COPY ./app/src ./src
+RUN ls src/
+COPY ./app/public ./public
+CMD ["npm", "start"]
 # [END dockerfile]
