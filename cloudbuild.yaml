@@ -67,6 +67,7 @@ steps:
 # Access the id_github file from Secret Manager
 steps:
 - name: gcr.io/cloud-builders/gcloud
+  id: Grab ssh key from secret manager
   entrypoint: 'bash'
   args: [ '-c', 'gcloud secrets versions access latest --secret=github > /root/.ssh/id_github' ]
   volumes:
@@ -75,6 +76,7 @@ steps:
 
 # Set up git with key and domain
 - name: 'gcr.io/cloud-builders/gcloud'
+  id: Add setup config entry for github
   entrypoint: 'bash'
   args:
   - '-c'
