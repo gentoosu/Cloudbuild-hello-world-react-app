@@ -101,7 +101,7 @@ steps:
   - '-c'
   - |
     set -x && \
-    ls -la  \
+    ls -la  && \
     cd Cloudbuild-hello-world-react-env && \
     git remote set-url origin git@github:gentoosu/Cloudbuild-hello-world-react-env.git &&\
     git add kubernetes.yaml && \
