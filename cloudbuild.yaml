@@ -64,19 +64,48 @@ steps:
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" > Cloudbuild-hello-world-react-env/kubernetes.yaml
 
+# Access the id_github file from Secret Manager
+steps:
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: [ '-c', 'gcloud secrets versions access latest --secret=github > /root/.ssh/id_github' ]
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Set up git with key and domain
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_github
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_github
+    EOF
+    ssh-keyscan -t rsa github.com > /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
 # This step pushes the manifest back to hello-cloudbuild-env
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Push manifest
-  entrypoint: /bin/sh
+  entrypoint: /bin/bash
   args:
   - '-c'
   - |
     set -x && \
     cd Cloudbuild-hello-world-react-env && \
+    get remote set-url origin git@github:gentoosu/Cloudbuild-hello-world-react-env.git \
     git add kubernetes.yaml && \
     git commit -m "Deploying image gcr.io/${PROJECT_ID}/hello-cloudbuild:${SHORT_SHA}
     Built from commit ${COMMIT_SHA} of repository Cloudbuild-hello-world-react-env
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+    get remote set-url origin git@github:gentoosu/Cloudbuild-hello-world-react-env.git \
     git push origin candidate
-
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
 # [END cloudbuild-trigger-cd]
