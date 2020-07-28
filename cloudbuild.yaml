@@ -49,6 +49,7 @@ steps:
   args:
   - '-c'
   - |
+    pwd && \
     git clone https://github.com/gentoosu/Cloudbuild-hello-world-react-env.git && \
     ls -la && \
     cd Cloudbuild-hello-world-react-env && \
@@ -62,7 +63,6 @@ steps:
   args:
   - '-c'
   - |
-     ls -la && \
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" > Cloudbuild-hello-world-react-env/kubernetes.yaml
 
@@ -101,7 +101,6 @@ steps:
   - '-c'
   - |
     set -x && \
-    ls -la  && \
     cd Cloudbuild-hello-world-react-env && \
     git remote set-url origin git@github:gentoosu/Cloudbuild-hello-world-react-env.git &&\
     git add kubernetes.yaml && \
