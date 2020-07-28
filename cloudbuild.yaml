@@ -67,7 +67,6 @@ steps:
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" > Cloudbuild-hello-world-react-env/kubernetes.yaml
 
 # Access the id_github file from Secret Manager
-steps:
 - name: gcr.io/cloud-builders/gcloud
   id: Grab ssh key from secret manager
   entrypoint: 'bash'

@@ -7,7 +7,7 @@ const Hello = function(name) {
   );
 };
 
-const view = Hello("Mike.");
+const view = Hello("Mike..");
 
 const element = document.getElementById("app");
 ReactDOM.render(view, element);
